@@ -4,6 +4,7 @@ from app.api.endpoints.locations import locations_router
 from app.api.endpoints.routes import routes_router
 from app.api.endpoints.drones import drones_router
 from app.api.endpoints.sensors import sensors_router
+from app.api.endpoints.websockets import websockets_router
 
 router = FastAPI()
 
@@ -19,6 +20,8 @@ router.include_router(locations_router)
 router.include_router(routes_router)
 router.include_router(drones_router)
 router.include_router(sensors_router)
+router.include_router(websockets_router)
+
 
 if __name__ == "__main__":
     import uvicorn

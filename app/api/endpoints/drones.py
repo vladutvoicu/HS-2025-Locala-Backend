@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+import requests
 from app.api.utils.drones import *
 from app.api.schemas.drones import *
 from app.core.websockets import ConnectionManager

@@ -1,45 +1,40 @@
-
-def execute_drone_command(command: str, speed: int):
-    command = command.upper()
-
-    if command == "TAKEOFF":
-        print(f"🚁 Drone is taking off with throttle at {speed}% power.")
-        return None, None
-
-    elif command == "LAND":
-        print(f"🛬 Drone is landing with throttle reduction at {speed}%.")
-        return None, None
-
-    elif command == "MOVE_FWD":
-        print(f"➡️ Moving forward at {speed}% speed.")
-        return None, None
-
-    elif command == "MOVE_BWD":
-        print(f"⬅️ Moving backward at {speed}% speed.")
-        return None, None
-
-    elif command == "MOVE_LEFT":
-        print(f"⬅️ Strafing left at {speed}% speed.")
-        return None, None
-
-    elif command == "MOVE_RIGHT":
-        print(f"➡️ Strafing right at {speed}% speed.")
-        return None, None
-
-    elif command == "TURN_LEFT":
-        print(f"↩️ Rotating left (yaw) at {speed}% speed.")
-        return None, None
-
-    elif command == "TURN_RIGHT":
-        print(f"↪️ Rotating right (yaw) at {speed}% speed.")
-        return None, None
-
-    elif command == "HOVER":
-        print(f"🛑 Drone is hovering in place with stabilization at {speed}%.")
-        return None, None
-
-    else:
-        print("❌ Unknown command received. Please check input.")
-        return None, "Unknown command received. Please check input."
+import requests
+from app.core.esp import esp_controller
+from datetime import datetime
 
 
+def execute_drone_command(command: str, value: int):
+    command_map = {
+        "ARM": 4,
+        "THROTTLE": 0,
+        "ROLL": 1,
+        "PITCH": 2,
+        "YAW": 3
+    }
+
+    if command in command_map:
+        channel = command_map[command]
+        print(f"{command}: {value}")
+        timestamp_str = datetime.now().strftime("%H:%M:%S")
+        print(timestamp_str)
+
+        if value > 1900:
+            value = 1900
+        elif value < 1050:
+            value = 1050
+
+        if command == "ARM":
+            esp_controller.update_channel(0, 600)
+
+        esp_controller.update_channel(channel, value)
+
+    if command == "HOVER":
+        print(f"{command}: {value}")
+        esp_controller.update_channel(0, 1200)  # THROTTLE
+        esp_controller.update_channel(1, 1200)  # ROLL
+        esp_controller.update_channel(2, 1200)  # PITCH
+        esp_controller.update_channel(3, 1200)  # YAW
+    # else:
+    #     print("❌ Unknown command received. Please check input.")
+
+    return None, None

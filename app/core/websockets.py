@@ -1,5 +1,6 @@
 from starlette.websockets import WebSocket, WebSocketDisconnect
-from app.api.utils.drones import *
+from app.api.utils.drones import execute_drone_command
+from app.core.esp import esp_controller
 
 
 class SingletonMeta(type):
@@ -25,6 +26,10 @@ class ConnectionManager(metaclass=SingletonMeta):
     async def disconnect(self, user_id: str):
         self.active_connections.pop(user_id, None)
 
+        # Close the ESP session when the WebSocket disconnects
+        if not self.active_connections:  # If no active connections left
+            esp_controller.close()  # Close the ESP session
+
     async def broadcast_message(self, user_id, message):
         connection = self.active_connections.get(user_id)
         if connection:
@@ -37,9 +42,9 @@ class ConnectionManager(metaclass=SingletonMeta):
                 data = await websocket.receive_json()
                 print(data)
                 command = data["command"]
-                speed = data["speed"]
+                value = data["value"] - 300
 
-                _, error = execute_drone_command(command, speed)
+                _, error = execute_drone_command(command, value)
                 error = None
                 if error:
                     await self.broadcast_message(user_id, error)

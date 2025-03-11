@@ -1,7 +1,7 @@
 import requests
 
 # Replace with the actual IP address of your ESP8266
-ESP_IP = "http://192.168.0.118"  # Use the IP address printed by your ESP8266 after connection
+ESP_IP = "http://192.168.194.250"  # Use the IP address printed by your ESP8266 after connection
 
 # Command mapping (0 = THROTTLE, 1 = ROLL, 2 = PITCH, 3 = YAW, 4 = ARM)
 COMMAND_MAP = {

@@ -22,5 +22,5 @@ class ESPController:
 
 
 # ✅ Singleton instance of ESPController
-ESP_IP = "http://192.168.0.118"  # Replace with actual IP
+ESP_IP = "http://192.168.194.250"  # Replace with actual IP
 esp_controller = ESPController(ESP_IP)
